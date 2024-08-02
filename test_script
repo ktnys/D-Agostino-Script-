@@ -89,7 +89,7 @@ dagoTest = Function( {dataCol},
     
     // Create a data table to show results
     results = New Table("D'Agostino Normality Test Results",
-        Add Rows(1),
+        Add Rows(3),
         New Column("Test", Character, Values({"Omnibus", "Skewness", "Kurtosis"})),
         New Column("Statistic", Numeric, Values({omniStat, Z3, Z4})),
         New Column("p-Value", Numeric, Values({omniPVal, skewPVal, kurtPVal}))
@@ -104,10 +104,13 @@ dt = Current Data Table();
 dlog = New Window("Select Column for D'Agostino Test",
     V List Box(
         Text Box("Select a column:"),
-        colList = Column List Box(dt),
+        colList = Col List Box(dt),
         H List Box(
             Button("OK",
-                dagoTest(colList << Get Selected)
+                If( N Items( colList << Get Selected ) > 0,
+                    dagoTest(colList << Get Selected),
+                    Throw("Please select a column!")
+                )
             ),
             Button("Cancel", Close(dlog))
         )
