@@ -98,19 +98,19 @@ dagoTest = Function( {dataCol},
     results << Show Window;
 );
 
-// Ensure a data table is active
-dt = Current Data Table();
+// Open your specific data table
+dt = Data Table("dago_test");
 
 If( Is Empty(dt),
-    Throw("No active data table. Please open a data table first.")
+    Throw("The data table 'dago_test' is not open. Please open it first.")
 );
 
 // Specify the column you want to test
-columnName = "YourNumericColumnName"; // Replace with the actual column name
+columnName = "Data"; // This is your column of interest
 
 // Check if the column exists and is numeric
 if( !Is Numeric(Column(dt, columnName)) || Is Missing(columnName),
-    Throw("Column is not numeric or does not exist in the data table.")
+    Throw("Column 'Data' is not numeric or does not exist in the data table.")
 );
 
 // Run the D'Agostino test on the specified column
