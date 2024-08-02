@@ -109,9 +109,10 @@ If( Is Empty(dt),
 columnName = "Data"; // This is your column of interest
 
 // Check if the column exists and is numeric
-if( !Is Numeric(Column(dt, columnName)) || Is Missing(columnName),
+col = Column(dt, columnName);
+if( col << Get Data Type != "Numeric",
     Throw("Column 'Data' is not numeric or does not exist in the data table.")
 );
 
 // Run the D'Agostino test on the specified column
-dagoTest(Column(dt, columnName));
+dagoTest(col);
