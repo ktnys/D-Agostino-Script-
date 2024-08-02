@@ -121,10 +121,10 @@ If( N Items(numericColumns) == 0,
 
 // Dialog to select column
 dlog = New Window("Select Column for D'Agostino Test",
-    << Modal,
+    <<Modal,  // Ensures that the dialog box is modal
     V List Box(
         Text Box("Select a numeric column:"),
-        colList = List Box(numericColumns),
+        colList = Col List Box(dt, "numeric", multipleSelection(0)),
         H List Box(
             Button Box("OK",
                 Expr(
