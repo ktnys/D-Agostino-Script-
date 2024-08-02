@@ -82,7 +82,10 @@ dagoTest = Function( {dataCol},
         Throw("Sample size must be at least 20")
     );
 
+    // Compute the omnibus statistic and p-value
     {omniStat, omniPVal} = omnibusTest(x);
+
+    // Compute skewness and kurtosis statistics and p-values
     {Z3, skewPVal} = skewnessTest(x);
     {Z4, kurtPVal} = kurtosisTest(x);
 
