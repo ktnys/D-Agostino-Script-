@@ -4,7 +4,7 @@ Names Default To Here(1);
 // Function to compute skewness test
 skewnessTest = Function( {x},
     {Default Local},
-    
+
     n = N Rows(x);
     meanX = Col Mean(x);
     s = Col Std Dev(x);
@@ -17,14 +17,14 @@ skewnessTest = Function( {x},
     a = Sqrt( 2 / (W2 - 1) );
     Z3 = delta * Log( (U3 / a) + Sqrt( (U3 / a) ^ 2 + 1 ) );
     pZ3 = 2 * (1 - Normal Distribution( Abs(Z3) ));
-    
+
     {Z3, pZ3}
 );
 
 // Function to compute kurtosis test
 kurtosisTest = Function( {x},
     {Default Local},
-    
+
     n = N Rows(x);
     meanX = Col Mean(x);
     s = Col Std Dev(x);
@@ -38,14 +38,14 @@ kurtosisTest = Function( {x},
     pos = Sign(pos0) * Abs(pos0) ^ (1/3);
     Z4 = (1 - 2 / (9 * A) - pos) / jm;
     pZ4 = 2 * (1 - Normal Distribution( Abs(Z4) ));
-    
+
     {Z4, pZ4}
 );
 
 // Function to compute omnibus test
 omnibusTest = Function( {x},
     {Default Local},
-    
+
     n = N Rows(x);
     meanX = Col Mean(x);
     s = Col Std Dev(x);
@@ -68,25 +68,25 @@ omnibusTest = Function( {x},
     Z4 = (1 - 2 / (9 * A) - pos) / jm;
     omni = Z3 ^ 2 + Z4 ^ 2;
     pomni = 1 - Chi Square Distribution(omni, 2);
-    
+
     {omni, pomni}
 );
 
 // Main D'Agostino test function
 dagoTest = Function( {dataCol},
     {Default Local},
-    
+
     x = dataCol << Get As Matrix;
     n = N Rows(x);
-    
+
     If(n < 20,
         Throw("Sample size must be at least 20")
     );
-    
+
     {omniStat, omniPVal} = omnibusTest(x);
     {Z3, skewPVal} = skewnessTest(x);
     {Z4, kurtPVal} = kurtosisTest(x);
-    
+
     // Create a data table to show results
     results = New Table("D'Agostino Normality Test Results",
         Add Rows(3),
@@ -94,7 +94,7 @@ dagoTest = Function( {dataCol},
         New Column("Statistic", Numeric, Values({omniStat, Z3, Z4})),
         New Column("p-Value", Numeric, Values({omniPVal, skewPVal, kurtPVal}))
     );
-    
+
     results << Show Window;
 );
 
@@ -106,13 +106,7 @@ If( Is Empty(dt),
 );
 
 // Get only numeric columns from the active data table
-numericColumns = {};
-For(i = 1, i <= N Cols(dt), i++,
-    col = Column(dt, i);
-    If(col << Get Data Type == "Numeric",
-        Insert Into(numericColumns, col << Get Name)
-    );
-);
+numericColumns = dt << Get Column Names( Numeric );
 
 // Verify that numeric columns were found
 If( N Items(numericColumns) == 0,
@@ -124,14 +118,14 @@ dlog = New Window("Select Column for D'Agostino Test",
     <<Modal,  // Ensures that the dialog box is modal
     V List Box(
         Text Box("Select a numeric column:"),
-        colList = Col List Box(dt, "numeric", multipleSelection(0)),
+        colList = Col List Box(dt), // Use Col List Box to ensure numeric columns are shown
         H List Box(
             Button Box("OK",
                 Expr(
                     // Check if a column is selected
                     If(N Items(colList << Get Selected) > 0,
                         selectedCol = colList << Get Selected;
-                        Close(dlog); // Close the dialog
+                        Close Window(dlog); // Close the dialog
                         // Run the test on the selected column
                         dagoTest(Column(dt, selectedCol[1]));
                     ,
@@ -142,7 +136,7 @@ dlog = New Window("Select Column for D'Agostino Test",
             ),
             Button Box("Cancel",
                 Expr(
-                    Close(dlog); // Just close the dialog
+                    Close Window(dlog); // Just close the dialog
                 )
             )
         )
