@@ -126,7 +126,7 @@ dlog = New Window("Select Column for D'Agostino Test",
         Text Box("Select a numeric column:"),
         colList = List Box(numericColumns),
         H List Box(
-            Button("OK",
+            Button Box("OK",
                 // Action when "OK" is clicked
                 Expr(
                     // Check if a column is selected
@@ -141,7 +141,7 @@ dlog = New Window("Select Column for D'Agostino Test",
                     )
                 )
             ),
-            Button("Cancel",
+            Button Box("Cancel",
                 // Action when "Cancel" is clicked
                 Expr(
                     Close(dlog); // Just close the dialog
