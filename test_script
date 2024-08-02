@@ -121,6 +121,7 @@ If( N Items(numericColumns) == 0,
 
 // Dialog to select column
 dlog = New Window("Select Column for D'Agostino Test",
+    << Modal,
     V List Box(
         Text Box("Select a numeric column:"),
         colList = List Box(numericColumns),
@@ -130,7 +131,7 @@ dlog = New Window("Select Column for D'Agostino Test",
                     // Check if a column is selected
                     If(N Items(colList << Get Selected) > 0,
                         selectedCol = colList << Get Selected;
-                        Close Window(dlog); // Close the dialog
+                        Close(dlog); // Close the dialog
                         // Run the test on the selected column
                         dagoTest(Column(dt, selectedCol[1]));
                     ,
@@ -141,7 +142,7 @@ dlog = New Window("Select Column for D'Agostino Test",
             ),
             Button Box("Cancel",
                 Expr(
-                    Close Window(dlog); // Just close the dialog
+                    Close(dlog); // Just close the dialog
                 )
             )
         )
