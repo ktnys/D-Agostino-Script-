@@ -37,7 +37,7 @@ kurtosisTest = Function( {x},
     pos0 = ((1 - 2 / A) / (1 + U4 * Sqrt(2 / (A - 4))));
     pos = Sign(pos0) * Abs(pos0) ^ (1/3);
     Z4 = (1 - 2 / (9 * A) - pos) / jm;
-    pZ4 = 2 * (1 - Normal Distribution( Abs(Z4) ));
+    pZ4 = 2 * (1 - Normal Distribution( Abs(pos) ));
     
     {Z4, pZ4}
 );
@@ -121,7 +121,7 @@ If( N Items(numericColumns) == 0,
 
 // Dialog to select column
 dlog = New Window("Select Column for D'Agostino Test",
-    <<Modal, // Ensure the window is modal to prevent other actions until closed
+    << Modal,  // Ensures that the dialog box is modal
     V List Box(
         Text Box("Select a numeric column:"),
         colList = List Box(numericColumns),
@@ -132,12 +132,11 @@ dlog = New Window("Select Column for D'Agostino Test",
                     // Check if a column is selected
                     If(N Items(colList << Get Selected) > 0,
                         selectedCol = colList << Get Selected;
-                        Close Window(dlog); // Close the dialog
                         // Run the test on the selected column
                         dagoTest(Column(dt, selectedCol[1]));
+                        Close Window(dlog); // Close the dialog
                     ,
                         // If no column is selected, show an error message
-                        Wait(0.1); // Small delay to ensure dialog refreshes
                         Throw("Please select a column!");
                     )
                 )
