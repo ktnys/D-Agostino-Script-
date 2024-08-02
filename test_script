@@ -129,14 +129,18 @@ dlog = New Window("Select Column for D'Agostino Test",
                 Expr(
                     // Validate column selection
                     If(N Items(colList << Get Selected) > 0,
-                        dagoTest(Column(dt, colList << Get Selected[1])),  // Ensure we only take the first selection
+                        // Ensure we only take the first selection
+                        selectedCol = colList << Get Selected;
+                        Close Window(dlog);
+                        dagoTest(Column(dt, selectedCol[1])),
                         Throw("Please select a column!")
                     );
-                    Close Window(dlog);
                 )
             ),
             Button Box("Cancel",
-                Expr(Close Window(dlog))
+                Expr(
+                    Close Window(dlog)
+                )
             )
         )
     )
