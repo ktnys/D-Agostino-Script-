@@ -98,33 +98,38 @@ dagoTest = Function( {dataCol},
     results << Show Window;
 );
 
-// Get the current data table
+// Ensure a data table is active
 dt = Current Data Table();
 
-// Ensure the data table is loaded
-If(Is Empty(dt),
-    Throw("No data table is loaded.")
+If( Is Empty(dt),
+    Throw("No active data table. Please open a data table first.")
 );
 
-// Get only numeric columns
-numericColumns = dt << Get Column Names( Numeric );
+// Get only numeric columns from the active data table
+numericColumns = {};
+For(i = 1, i <= N Cols(dt), i++,
+    col = Column(dt, i);
+    If(col << Get Data Type == "Numeric",
+        Insert Into(numericColumns, col << Get Name)
+    );
+);
 
-// Check if there are numeric columns
+// Verify that numeric columns were found
 If( N Items(numericColumns) == 0,
-    Throw("No numeric columns found in the data table.")
+    Throw("No numeric columns found in the data table. Please ensure the table contains numeric data.")
 );
 
 // Dialog to select column
 dlog = New Window("Select Column for D'Agostino Test",
     V List Box(
         Text Box("Select a numeric column:"),
-        colList = Col List Box(numericColumns),
+        colList = List Box(numericColumns),
         H List Box(
             Button Box("OK",
                 Expr(
                     // Validate column selection
                     If(N Items(colList << Get Selected) > 0,
-                        dagoTest(Column(dt, colList << Get Selected)),
+                        dagoTest(Column(dt, colList << Get Selected[1])),  // Ensure we only take the first selection
                         Throw("Please select a column!")
                     );
                     Close Window(dlog);
