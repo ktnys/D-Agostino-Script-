@@ -101,10 +101,13 @@ dagoTest = Function( {dataCol},
 // Dialog to select column
 dt = Current Data Table();
 
+// Filter to show only numeric columns
+numericColumns = dt << Get Column Names( Numeric );
+
 dlog = New Window("Select Column for D'Agostino Test",
     V List Box(
-        Text Box("Select a column:"),
-        colList = Col List Box(dt),
+        Text Box("Select a numeric column:"),
+        colList = Col List Box(numericColumns),
         H List Box(
             Button Box("OK",
                 Expr(
