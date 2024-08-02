@@ -106,13 +106,18 @@ dlog = New Window("Select Column for D'Agostino Test",
         Text Box("Select a column:"),
         colList = Col List Box(dt),
         H List Box(
-            Button("OK",
-                If( N Items( colList << Get Selected ) > 0,
-                    dagoTest(colList << Get Selected),
-                    Throw("Please select a column!")
+            Button Box("OK",
+                Expr(
+                    If(N Items(colList << Get Selected) > 0,
+                        dagoTest(Column(dt, colList << Get Selected)),
+                        Throw("Please select a column!")
+                    );
+                    Close Window(dlog);
                 )
             ),
-            Button("Cancel", Close(dlog))
+            Button Box("Cancel",
+                Expr(Close Window(dlog))
+            )
         )
     )
 );
